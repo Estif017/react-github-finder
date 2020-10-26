@@ -5,13 +5,15 @@ import './App.css';
 import Navbar from './Components/Navbar/Navbar';
 import Users from './Components/Users/Users';
 import SearchBox from './Components/SearchBox/SearchBox';
+import Alert from './Components/Alert/Alert';
 
 
 class App extends Component {
 
   state = {
     users:[],
-    isLoading:false
+    isLoading:false,
+    alert:null
   }
 
 
@@ -28,6 +30,11 @@ class App extends Component {
     this.setState({users:[]})
   }
 
+  setAlert=(message,style)=>{
+    this.setState({alert:{message,style}})
+    setTimeout(()=>this.setState({alert:null}),3000)
+  }
+
   render(){
     const {users, isLoading}=this.state
 
@@ -35,12 +42,16 @@ class App extends Component {
     return (
       <div className="App">
         <Navbar  />
-        <SearchBox 
-          searchUsers={this.searchUsers} 
-          clearUsers={this.clearUsers}
-          showClear={this.state.users.length>0?true:false}
-          />
-        <Users loading={isLoading} users={users}/>
+        <div className="container">
+          <Alert alert={this.state.alert}/>
+          <SearchBox 
+            searchUsers={this.searchUsers} 
+            clearUsers={this.clearUsers}
+            showClear={this.state.users.length>0?true:false}
+            setAlert={this.setAlert}
+            />
+          <Users loading={isLoading} users={users}/>
+        </div>
       </div>
     );
   }
