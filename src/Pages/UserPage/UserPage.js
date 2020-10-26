@@ -1,17 +1,16 @@
-import React,{Fragment} from 'react'
+import React,{Fragment,useEffect} from 'react'
 import {Link} from 'react-router-dom'
 
 import Spinner from '../../Components/Spinner/Spinner';
 import Repos from '../ReposPage/Repos';
 
-class UserPage extends React.Component {
-    componentDidMount(){
-        this.props.getUser(this.props.match.params.login)
-        this.props.getUserRepos(this.props.match.params.login)
-    }
-    render(){
-        const{name,company,avatar_url,location,bio,login,blog,html_url,followers,following,public_repos,public_gists,hireable}=this.props.user
-        const {loading,repos}=this.props
+const UserPage =({user,match,getUser,getUserRepos,loading,repos})=> {
+    useEffect(()=>{
+        getUser(match.params.login)
+        getUserRepos(match.params.login)
+    },[])
+
+        const{name,company,avatar_url,location,bio,login,blog,html_url,followers,following,public_repos,public_gists,hireable}=user
         if (loading) return <Spinner/>
         return (
             <Fragment>
@@ -80,7 +79,5 @@ class UserPage extends React.Component {
         <Link to={`/user/${login}/repos`}>Go to repos</Link>
         </Fragment>
         )
-    }
-    }
-
+}
 export default UserPage
