@@ -2,14 +2,16 @@ import React,{Fragment} from 'react'
 import {Link} from 'react-router-dom'
 
 import Spinner from '../../Components/Spinner/Spinner';
+import Repos from '../ReposPage/Repos';
 
 class UserPage extends React.Component {
     componentDidMount(){
         this.props.getUser(this.props.match.params.login)
+        this.props.getUserRepos(this.props.match.params.login)
     }
     render(){
         const{name,company,avatar_url,location,bio,login,blog,html_url,followers,following,public_repos,public_gists,hireable}=this.props.user
-        const {loading}=this.props
+        const {loading,repos}=this.props
         if (loading) return <Spinner/>
         return (
             <Fragment>
@@ -74,7 +76,9 @@ class UserPage extends React.Component {
           <div className='badge badge-light'>Public Repos: {public_repos}</div>
           <div className='badge badge-dark'>Public Gists: {public_gists}</div>
         </div>
-            </Fragment>
+        <Repos repos={repos}/>    
+        <Link to={`/user/${login}/repos`}>Go to repos</Link>
+        </Fragment>
         )
     }
     }

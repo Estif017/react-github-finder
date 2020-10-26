@@ -11,13 +11,15 @@ import About from './Pages/About/About';
 import UserPage from './Pages/UserPage/UserPage';
 
 
+
 class App extends Component {
 
   state = {
     users:[],
     user:{},
     isLoading:false,
-    alert:null
+    alert:null,
+    repos:[]
   }
 
 
@@ -50,8 +52,16 @@ class App extends Component {
     })
   }
 
+  getUserRepos=async userName=>{
+    this.searchUsers({isLoading:true})
+    const res=await axios.get(`https://api.github.com/users/${userName}/repos?per_page=5&sort=created:asc&client_id=${
+      process.env.REACT_APP_GITHUB_CLIENT_ID
+    }&client_secret=${process.env.REACT_APP_GITHUB_CLIENT_SECRET}`)
+    this.setState({repos:res.data,isLoading: false})
+  }
+
   render(){
-    const {users, isLoading,user}=this.state
+    const {users, isLoading,user,repos}=this.state
 
 
     return (
@@ -70,7 +80,7 @@ class App extends Component {
               <Users loading={isLoading} users={users} />
             </Route>
             <Route path='/about'><About/></Route>
-            <Route exact path='/user/:login' render={props=>(<UserPage {...props} user={user} getUser={this.getUser} loading={isLoading} />)}  />
+            <Route exact path='/user/:login' render={props=>(<UserPage {...props} user={user} getUser={this.getUser} getUserRepos={this.getUserRepos} repos={repos} loading={isLoading} />)}  />
           </Switch>
         </div>
       </div>
