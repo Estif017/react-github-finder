@@ -1,17 +1,23 @@
-import React,{Fragment,useEffect} from 'react'
-import {Link} from 'react-router-dom'
+import React,{Fragment,useContext,useEffect} from 'react'
+import {Link, useRouteMatch} from 'react-router-dom'
+
+import GithubContext from '../../Context/Github/Github_Context'
 
 import Spinner from '../../Components/Spinner/Spinner';
 import Repos from '../ReposPage/Repos';
 
-const UserPage =({user,match,getUser,getUserRepos,loading,repos})=> {
+const UserPage =()=> {
+  const githubContext=useContext(GithubContext)
+  const {getUser,user,getUserRepos,isLoading,repos}=githubContext
+  const match = useRouteMatch()
     useEffect(()=>{
         getUser(match.params.login)
         getUserRepos(match.params.login)
+        // eslint-disable-next-line 
     },[])
 
         const{name,company,avatar_url,location,bio,login,blog,html_url,followers,following,public_repos,public_gists,hireable}=user
-        if (loading) return <Spinner/>
+        if (isLoading) return <Spinner/>
         return (
             <Fragment>
                 <Link to='/' className="btn btn-light">Back to search</Link>

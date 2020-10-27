@@ -1,7 +1,15 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+import React, { useContext, useState } from 'react'
 
-const SearchBox =({searchUsers,clearUsers,showClear,setAlert})=> {
+import GithubContext from '../../Context/Github/Github_Context'
+import AlertContext from '../../Context/Alert/Alert_context'
+
+const SearchBox =()=> {
+    const githubContext = useContext(GithubContext)
+    const alertContext=useContext(AlertContext)
+    
+    const {searchUsers,clearUsers,users} = githubContext
+    const {setAlertMessage}=alertContext
+    
     const [searchField,setSearchField]=useState('')
     
     const onChangeHandle=e => {
@@ -10,7 +18,7 @@ const SearchBox =({searchUsers,clearUsers,showClear,setAlert})=> {
     const onSubmit = e => {
         e.preventDefault()
         if(searchField === ''){
-            setAlert('Please enter something','light')
+            setAlertMessage('Please enter something','light')
         }else{
             searchUsers(searchField)
             setSearchField('')
@@ -30,21 +38,13 @@ const SearchBox =({searchUsers,clearUsers,showClear,setAlert})=> {
                         onChange={onChangeHandle} />
                     <button className='btn btn-dark btn-block'>Search</button>
                 </form>
-                {showClear && (<button
+                {users.length>0 && (<button
                     className='btn btn-light btn-block'
                     onClick={onClick}
                     >Clear</button>)} 
             </div>
         )
         
-    }
-    
-    
-     SearchBox.propTypes= {
-        searchUsers:PropTypes.func.isRequired,
-        clearUsers:PropTypes.func.isRequired,
-        showClear:PropTypes.bool.isRequired,
-        setAlert:PropTypes.func.isRequired,
     }
     export default SearchBox
     
